@@ -1,0 +1,211 @@
+directive @specifiedBy(url: String!) on SCALAR
+
+input CreateOrderInput {
+  customer: CustomerInput!
+  tickets: [TicketInput!]!
+  redirectUrl: String!
+}
+
+type CreateOrderResponse {
+  order: Order!
+  paymentUrl: String!
+}
+
+input CustomerInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  birthday: Date!
+  optInAge: Boolean!
+  optInTerms: Boolean!
+  optInMarketing: Boolean!
+}
+
+scalar Date
+
+scalar DateTime
+
+scalar Decimal
+
+type Game {
+  name: String!
+  url: String
+  emailDescription: String
+  status: GameStatus!
+  ticketUniverseSize: Int!
+  ticketPrice: Decimal!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  id: ID!
+  ticketCount: Int!
+  donationGoal: Decimal!
+  donationAmount: Decimal!
+}
+
+enum GameStatus {
+  inactive
+  active
+}
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): CreateOrderResponse
+}
+
+type Order {
+  totalAmount: Decimal!
+  paidAt: DateTime
+  cancelledAt: DateTime
+  refundedAt: DateTime
+  chargedBackAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  orderLines: OrderLineConnection!
+  transactions: TransactionConnection!
+  player: Player!
+  status: OrderStatus!
+  id: ID!
+  playerId: ID!
+}
+
+type OrderConnection {
+  edges: [OrderEdge!]!
+}
+
+type OrderEdge {
+  node: Order!
+}
+
+type OrderLine {
+  description: String
+  type: OrderLineType
+  quantity: Int!
+  price: Decimal!
+  order: Order!
+  orderLineTicket: OrderLineTicket
+  game: Game!
+  id: ID!
+  gameId: ID!
+  orderId: ID!
+}
+
+type OrderLineConnection {
+  edges: [OrderLineEdge!]!
+}
+
+type OrderLineEdge {
+  node: OrderLine!
+}
+
+type OrderLineTicket {
+  orderLine: OrderLine!
+  ticket: Ticket!
+  orderLineId: ID!
+  ticketId: ID!
+}
+
+enum OrderLineType {
+  ticket
+  donation
+}
+
+enum OrderStatus {
+  pending
+  paid
+  cancelled
+  refunded
+  charged_back
+}
+
+type Player {
+  firstName: String!
+  lastName: String!
+  email: String!
+  birthday: Date!
+  optInAge: Boolean!
+  optInTerms: Boolean!
+  optInMarketing: Boolean!
+  tickets: TicketConnection!
+  orders: OrderConnection!
+  id: ID!
+}
+
+type Query {
+  games: [Game!]!
+  game(id: ID!): Game
+  order(id: ID!): Order
+}
+
+type Ticket {
+  createdAt: DateTime!
+  updatedAt: DateTime
+  cancelledAt: DateTime
+  confirmedAt: DateTime
+  game: Game!
+  player: Player!
+  orderLineTicket: OrderLineTicket
+  status: TicketStatus!
+  code: String
+  id: ID!
+  gameId: ID!
+  playerId: ID!
+}
+
+type TicketConnection {
+  edges: [TicketEdge!]!
+}
+
+type TicketEdge {
+  node: Ticket!
+}
+
+input TicketInput {
+  gameId: ID!
+  quantity: Int!
+}
+
+enum TicketStatus {
+  reserved
+  confirmed
+  cancelled
+}
+
+type Transaction {
+  pspReference: String
+  amount: Decimal!
+  paidAt: DateTime
+  cancelledAt: DateTime
+  refundedAt: DateTime
+  chargedBackAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+  reason: String
+  reasonCode: String
+  deletedAt: DateTime
+  order: Order!
+  isPaid: Boolean!
+  isCancelled: Boolean!
+  isPending: Boolean!
+  isChargedBack: Boolean!
+  isRefunded: Boolean!
+  status: TransactionStatus!
+  id: ID!
+  orderId: ID!
+}
+
+type TransactionConnection {
+  edges: [TransactionEdge!]!
+}
+
+type TransactionEdge {
+  node: Transaction!
+}
+
+enum TransactionStatus {
+  pending
+  paid
+  cancelled
+  refunded
+  charged_back
+}

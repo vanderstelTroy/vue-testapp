@@ -1,0 +1,41 @@
+@import 'colors';
+
+@font-face {
+  font-family: "Fuse";
+  font-weight: 900;
+  font-style: italic;
+  src: url('../fonts/fuse-black-italic.woff2');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  background: $purple;
+  line-height: 1.6;
+  font-family: "Fuse", sans-serif;
+  font-size: 0.9375rem;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:after {
+    content: '';
+    position: fixed;
+    background-image: url('../images/background.png');
+    inset: 0;
+    opacity: .1;
+    z-index: -1;
+  }
+}
+
+#app {
+  max-width: 1512px;
+  margin: 4px auto;
+}
